@@ -102,14 +102,21 @@ body {
         padding: 16px;
         box-sizing: border-box;
         font-size: 24px;
+        flex-direction: column;
       }
       .card-front {
         background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        row-gap: 2rem;
+        font-family: Poppins-Regular !important;
       }
       .card-back {
         flex-wrap: wrap;
         background-color: #f8f8f8;
         transform: rotateY(180deg);
+        font-family: Poppins-Regular !important;
+
       }
       .buttons,
       .card-buttons {
