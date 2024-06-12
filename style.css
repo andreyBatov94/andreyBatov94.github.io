@@ -68,12 +68,14 @@
         width: 100%;
       }
       .speak-button {
-        margin-top: 10px;
+        margin-top: 1rem;
         padding: 10px;
         font-size: 16px;
         cursor: pointer;
-        border: none;
-        background-color: #2196f3;
-        color: white;
+        border: 1px solid #333333;
+        background-color: transparent;
+        color: #333333;
+        width: calc(100% - 2rem);
+        font-weight: 700;
         border-radius: 5px;
       }
