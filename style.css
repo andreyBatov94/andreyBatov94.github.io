@@ -76,6 +76,7 @@
         background-color: transparent;
         color: #333333;
         width: calc(100% - 5rem);
+        height: 60px;
         font-weight: 700;
         border-radius: 5px;
       }
