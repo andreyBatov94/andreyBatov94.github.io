@@ -42,14 +42,14 @@
       }
       .card-front {
         background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        row-gap: 2rem;
       }
       .card-back {
         flex-wrap: wrap;
         background-color: #f8f8f8;
         transform: rotateY(180deg);
-        display: flex;
-        flex-direction: column;
-        row-gap: 2rem;
       }
       .buttons {
         display: flex;
