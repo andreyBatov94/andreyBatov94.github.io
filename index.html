@@ -8849,9 +8849,9 @@
       function displayWord(level) {
         const word = getRandomWord(level);
         currentWord = word.Слово;
-        cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
+        cardFront.innerHTML = `<div class='title-word'>${word.Слово}</div><div>${word.Транскрипция}</div>`;
         // cardFront.textContent = word.Слово;
-        cardBack.innerHTML = `<div>${word.Перевод}</div>`;
+        cardBack.innerHTML = `<div class='title-word'>${word.Перевод}</div>`;
       }
 
       document.querySelectorAll(".button").forEach((button) => {
