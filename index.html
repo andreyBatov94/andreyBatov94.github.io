@@ -8875,15 +8875,17 @@
 
       function displayWord(level) {
         const word = getRandomWord(level);
-        cardFront.textContent = word.Слово;
-        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
+        cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
+        // cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Перевод}</div>`;
       }
 
       function showNextWord() {
         currentIndex = (currentIndex + 1) % wordsData[currentLevel].length;
         const word = wordsData[currentLevel][currentIndex];
-        cardFront.textContent = word.Слово;
-        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
+        cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
+        // cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Перевод}</div>`;
         flashcard.classList.remove("flip");
       }
 
@@ -8892,8 +8894,9 @@
           (currentIndex - 1 + wordsData[currentLevel].length) %
           wordsData[currentLevel].length;
         const word = wordsData[currentLevel][currentIndex];
-        cardFront.textContent = word.Слово;
-        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
+        cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
+        // cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Перевод}</div>`;
         flashcard.classList.remove("flip");
       }
 
@@ -8911,7 +8914,8 @@
       });
 
       speakButton.addEventListener("click", () => {
-        const utterance = new SpeechSynthesisUtterance(cardFront.textContent);
+        const firstDiv = cardFront.querySelector("div:first-child");
+        const utterance = new SpeechSynthesisUtterance(firstDiv.textContent);
         utterance.lang = "en-US";
         speechSynthesis.speak(utterance);
       });
