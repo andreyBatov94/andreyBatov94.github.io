@@ -88,6 +88,7 @@
       <button class="button" data-level="B2">B2</button>
       <button class="button" data-level="C1">C1</button>
     </div>
+    <button class="speak-button" id="speak-button">Озвучить слово</button>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -8892,6 +8893,9 @@
       const cardFront = document.getElementById("card-front");
       const cardBack = document.getElementById("card-back");
       const buttons = document.querySelectorAll(".button");
+      const speakButton = document.getElementById('speak-button');
+
+      let currentWord = null;
 
       function getRandomWord(level) {
         const words = wordsData[level];
@@ -8920,6 +8924,14 @@
           showNextCard(level);
         });
       });
+
+      speakButton.addEventListener('click', () => {
+            if (currentWord) {
+                const utterance = new SpeechSynthesisUtterance(currentWord.Слово);
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            }
+        });
 
       // Показать первую карточку уровня A1 по умолчанию
       showNextCard("A1");
