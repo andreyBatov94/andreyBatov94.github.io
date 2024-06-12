@@ -2,8 +2,11 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <link rel="manifest" href="/manifest.json">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"
+    />
+    <link rel="manifest" href="/manifest.json" />
     <title>Карточки для запоминания слов</title>
     <style>
       body {
@@ -73,15 +76,15 @@
         width: 100%;
       }
       .speak-button {
-            margin-top: 10px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            background-color: #2196F3;
-            color: white;
-            border-radius: 5px;
-        }
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background-color: #2196f3;
+        color: white;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body>
@@ -101,16 +104,22 @@
     <button class="speak-button" id="speak-button">Озвучить слово</button>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
-  
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/service-worker.js").then(
+            function (registration) {
+              console.log(
+                "ServiceWorker registration successful with scope: ",
+                registration.scope
+              );
+            },
+            function (err) {
+              console.log("ServiceWorker registration failed: ", err);
+            }
+          );
+        });
+      }
+
       const wordsData = {
         A1: [
           {
@@ -8903,26 +8912,31 @@
       const cardFront = document.getElementById("card-front");
       const cardBack = document.getElementById("card-back");
       const buttons = document.querySelectorAll(".button");
-      const speakButton = document.getElementById('speak-button');
+      const speakButton = document.getElementById("speak-button");
 
-      let currentWord = null;
+      let currentWord = "";
 
       function getRandomWord(level) {
         const words = wordsData[level];
-        const randomIndex = Math.floor(Math.random() * words.length);
-        return words[randomIndex];
+        return words[Math.floor(Math.random() * words.length)];
       }
 
-      function displayWord(word) {
-        cardFront.textContent = word.Слово;
-        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div class='empty'></div><div>${word.Перевод}</div>`;
-      }
-
-      function showNextCard(level) {
-        card.classList.remove("flip");
+      function displayWord(level) {
         const word = getRandomWord(level);
-        displayWord(word);
+        currentWord = word.Слово;
+        cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
       }
+
+      document.querySelectorAll(".button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const level = button.getAttribute("data-level");
+          displayWord(level);
+          if (flashcard.classList.contains("flip")) {
+            flashcard.classList.remove("flip");
+          }
+        });
+      });
 
       card.addEventListener("click", () => {
         card.classList.toggle("flip");
@@ -8935,13 +8949,11 @@
         });
       });
 
-      speakButton.addEventListener('click', () => {
-            if (currentWord) {
-                const utterance = new SpeechSynthesisUtterance(currentWord.Слово);
-                utterance.lang = 'en-US';
-                window.speechSynthesis.speak(utterance);
-            }
-        });
+      speakButton.addEventListener("click", () => {
+        const utterance = new SpeechSynthesisUtterance(currentWord);
+        utterance.lang = "en-US";
+        speechSynthesis.speak(utterance);
+      });
 
       // Показать первую карточку уровня A1 по умолчанию
       showNextCard("A1");
