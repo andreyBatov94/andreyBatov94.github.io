@@ -8,6 +8,7 @@ body {
         justify-content: center;
         height: 100vh;
         margin: 0;
+        background-image: url(https://i.pinimg.com/564x/f2/8d/02/f28d025eb0490c7a6efb224cf96facc8.jpg);
       }
       .level-title {
         font-size: 32px;
