@@ -67,7 +67,7 @@ body {
         
      }
      #speak-button { grid-area: 1 / 2 / 2 / 4; }
-     #next-card-button { grid-area: 1 / 4 / 2 / 5; }
+     #next-card-button { grid-area: 1 / 4 / 2 / 5; padding: 10px 10px 10px 20px !important;}
       .hidden {
         display: none;
       }
