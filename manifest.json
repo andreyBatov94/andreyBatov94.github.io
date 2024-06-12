@@ -1,6 +1,6 @@
 {
-  "name": "Карточки для запоминания слов",
-  "short_name": "Карточки",
+  "name": "English Words by Andrey Batov",
+  "short_name": "English Words",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
