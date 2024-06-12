@@ -7,27 +7,47 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"
     />
     <link rel="manifest" href="/manifest.json" />
-    <title>English Words</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/styles/style.css" />
+    <title>Англійська мова</title>
   </head>
   <body>
-    <div class="card" id="flashcard">
-      <div class="card-inner">
-        <div class="card-front" id="card-front">
-          <img src="/front-background.jpg" alt="bg" />
+    <div class="wrapper">
+      <div id="level-selection">
+        <h2 class="level-title">Обрати рівень:</h2>
+        <div class="buttons">
+          <button class="button" data-level="A1">A1 - Elementary</button>
+          <button class="button" data-level="A2">A2 - Pre-Intermediate</button>
+          <button class="button" data-level="B1">B1 - Intermediate</button>
+          <button class="button" data-level="B2">
+            B2 - Upper Intermediate
+          </button>
+          <button class="button" data-level="C1">C1 - Advance</button>
         </div>
-        <div class="card-back" id="card-back"></div>
+      </div>
+
+      <div id="flashcard-container" class="hidden">
+        <div class="card" id="flashcard">
+          <div class="card-inner">
+            <div class="card-front" id="card-front"></div>
+            <div class="card-back" id="card-back"></div>
+          </div>
+        </div>
+        <div class="card-buttons">
+          <button class="navigation-button" id="previous-card-button">
+            <img src="/images/icons/arrow-back-iconic.svg" alt="" />
+          </button>
+          <button class="speak-button" id="speak-button">
+            <img src="/images/icons/voice-iconic.svg" alt="" />
+          </button>
+          <button class="navigation-button" id="next-card-button">
+            <img src="/images/icons/arrow-next-iconic.svg" alt="" />
+          </button>
+          <button class="navigation-button" id="select-level-button">
+            <img src="/images/icons/menu-iconic.svg" alt="" />
+          </button>
+        </div>
       </div>
     </div>
-    <div class="buttons">
-      <button class="button" data-level="A1">A1</button>
-      <button class="button" data-level="A2">A2</button>
-      <button class="button" data-level="B1">B1</button>
-      <button class="button" data-level="B2">B2</button>
-      <button class="button" data-level="C1">C1</button>
-    </div>
-    <button class="speak-button" id="speak-button">Озвучить слово</button>
-
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
@@ -8833,56 +8853,76 @@
         ],
       };
 
-      const card = document.getElementById("flashcard");
+      const levelSelection = document.getElementById("level-selection");
+      const flashcardContainer = document.getElementById("flashcard-container");
+      const flashcard = document.getElementById("flashcard");
       const cardFront = document.getElementById("card-front");
       const cardBack = document.getElementById("card-back");
-      const buttons = document.querySelectorAll(".button");
       const speakButton = document.getElementById("speak-button");
-
-      let currentWord = "";
+      const nextCardButton = document.getElementById("next-card-button");
+      const previousCardButton = document.getElementById(
+        "previous-card-button"
+      );
+      const selectLevelButton = document.getElementById("select-level-button");
+      let currentLevel = "";
+      let currentIndex = 0;
 
       function getRandomWord(level) {
         const words = wordsData[level];
-        return words[Math.floor(Math.random() * words.length)];
+        currentIndex = Math.floor(Math.random() * words.length);
+        return words[currentIndex];
       }
 
       function displayWord(level) {
         const word = getRandomWord(level);
-        currentWord = word.Слово;
-        cardFront.innerHTML = `<div class='title-word'>${word.Слово}</div><div>${word.Транскрипция}</div>`;
-        // cardFront.textContent = word.Слово;
-        cardBack.innerHTML = `<div class='title-word'>${word.Перевод}</div>`;
+        cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
+      }
+
+      function showNextWord() {
+        currentIndex = (currentIndex + 1) % wordsData[currentLevel].length;
+        const word = wordsData[currentLevel][currentIndex];
+        cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
+        flashcard.classList.remove("flip");
+      }
+
+      function showPreviousWord() {
+        currentIndex =
+          (currentIndex - 1 + wordsData[currentLevel].length) %
+          wordsData[currentLevel].length;
+        const word = wordsData[currentLevel][currentIndex];
+        cardFront.textContent = word.Слово;
+        cardBack.innerHTML = `<div>${word.Транскрипция}</div><div>${word.Перевод}</div>`;
+        flashcard.classList.remove("flip");
       }
 
       document.querySelectorAll(".button").forEach((button) => {
         button.addEventListener("click", () => {
-          const level = button.getAttribute("data-level");
-          displayWord(level);
-          if (flashcard.classList.contains("flip")) {
-            flashcard.classList.remove("flip");
-          }
+          currentLevel = button.getAttribute("data-level");
+          levelSelection.classList.add("hidden");
+          flashcardContainer.classList.remove("hidden");
+          displayWord(currentLevel);
         });
       });
 
-      card.addEventListener("click", () => {
-        card.classList.toggle("flip");
-      });
-
-      buttons.forEach((button) => {
-        button.addEventListener("click", (event) => {
-          const level = event.target.getAttribute("data-level");
-          showNextCard(level);
-        });
+      flashcard.addEventListener("click", () => {
+        flashcard.classList.toggle("flip");
       });
 
       speakButton.addEventListener("click", () => {
-        const utterance = new SpeechSynthesisUtterance(currentWord);
+        const utterance = new SpeechSynthesisUtterance(cardFront.textContent);
         utterance.lang = "en-US";
         speechSynthesis.speak(utterance);
       });
 
-      // // Показать первую карточку уровня A1 по умолчанию
-      // showNextCard("A1");
+      nextCardButton.addEventListener("click", showNextWord);
+      previousCardButton.addEventListener("click", showPreviousWord);
+
+      selectLevelButton.addEventListener("click", () => {
+        flashcardContainer.classList.add("hidden");
+        levelSelection.classList.remove("hidden");
+      });
     </script>
   </body>
 </html>
