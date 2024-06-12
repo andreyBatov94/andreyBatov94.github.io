@@ -12,6 +12,7 @@
         width: 350px;
         height: 400px;
         margin-bottom: 20px;
+        border-radius: 10px
       }
       .card-inner {
         position: relative;
@@ -21,6 +22,7 @@
         transition: transform 0.6s;
         transform-style: preserve-3d;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px
       }
       .card.flip .card-inner {
         transform: rotateY(180deg);
@@ -39,17 +41,23 @@
         padding: 16px;
         box-sizing: border-box;
         font-size: 24px;
+        border-radius: 10px
       }
       .card-front {
         background-color: #fff;
         display: flex;
         flex-direction: column;
         row-gap: 2rem;
+        border-radius: 10px    
+      }
+      .card-front img {
+        border-radius: 10px
       }
       .card-back {
         flex-wrap: wrap;
         background-color: #f8f8f8;
         transform: rotateY(180deg);
+        border-radius: 10px
       }
       .buttons {
         display: flex;
