@@ -9,6 +9,7 @@ if ('serviceWorker' in navigator) {
 const {
     languageSelection,
     levelSelection,
+    wordSelection,
     flashcardContainer,
     flashcard,
     cardFront,
@@ -16,11 +17,18 @@ const {
     speakButton,
     nextCardButton,
     previousCardButton,
+    startFlashcardsButton,
+    backToLevelSelectionButton,
     selectLevelButton,
-    languageSelect
+    languageSelect,
+    wordsContainer,
+    prevPageButton,
+    nextPageButton,
+    pageInfo
 } = {
     languageSelection: document.getElementById('language-selection'),
     levelSelection: document.getElementById('level-selection'),
+    wordSelection: document.getElementById('word-selection'),
     flashcardContainer: document.getElementById('flashcard-container'),
     flashcard: document.getElementById('flashcard'),
     cardFront: document.getElementById('card-front'),
@@ -28,22 +36,63 @@ const {
     speakButton: document.getElementById('speak-button'),
     nextCardButton: document.getElementById('next-card-button'),
     previousCardButton: document.getElementById('previous-card-button'),
+    startFlashcardsButton: document.getElementById('start-flashcards-button'),
+    backToLevelSelectionButton: document.getElementById('back-to-level-selection-button'),
     selectLevelButton: document.getElementById('select-level-button'),
-    languageSelect: document.getElementById('language-select')
+    languageSelect: document.getElementById('language-select'),
+    wordsContainer: document.getElementById('words-container'),
+    prevPageButton: document.getElementById('prev-page-button'),
+    nextPageButton: document.getElementById('next-page-button'),
+    pageInfo: document.getElementById('page-info')
 };
 
 let wordsData = {};
 let currentLevel = "";
+let selectedWords = [];
 let currentIndex = 0;
+let currentPage = 1;
+const wordsPerPage = 15;
 
 async function loadWordsData(language) {
     try {
         const response = await fetch(`/scripts/words/wordsData_${language}.json`);
         wordsData = await response.json();
-        console.log('Успешная загрузка списка слова для выбранного языка:', language);
+        console.log('Успешная загрузка списка слов для выбранного языка:', language);
     } catch (err) {
         console.error('Ошибка загрузки списка слов для выбранного языка:', err);
     }
+}
+
+function displayWordsForSelection(level, page = 1) {
+    wordsContainer.innerHTML = '';
+    const words = wordsData[level];
+    if (!words) {
+        console.error(`Слова для уровня ${level} не найдены`);
+        return;
+    }
+    currentPage = page;
+    const start = (page - 1) * wordsPerPage;
+    const end = Math.min(start + wordsPerPage, words.length);
+    for (let i = start; i < end; i++) {
+        const word = words[i];
+        const wordItem = document.createElement('div');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `word-${i}`;
+        checkbox.value = i;
+        wordItem.appendChild(checkbox);
+        const label = document.createElement('label');
+        label.htmlFor = `word-${i}`;
+        label.textContent = word.Слово;
+        wordItem.appendChild(label);
+        wordsContainer.appendChild(wordItem);
+    }
+    pageInfo.textContent = `Страница ${page} из ${Math.ceil(words.length / wordsPerPage)}`;
+}
+
+function getSelectedWords() {
+    const checkboxes = wordsContainer.querySelectorAll('input[type="checkbox"]:checked');
+    selectedWords = Array.from(checkboxes).map(checkbox => wordsData[currentLevel][checkbox.value]);
 }
 
 function updateFlashcard(word) {
@@ -51,26 +100,20 @@ function updateFlashcard(word) {
     cardBack.innerHTML = `<div>${word.Перевод}</div>`;
 }
 
-function getRandomWord(level) {
-    const words = wordsData[level];
-    currentIndex = Math.floor(Math.random() * words.length);
-    return words[currentIndex];
-}
-
-function displayWord(level) {
-    const word = getRandomWord(level);
+function displayWord() {
+    const word = selectedWords[currentIndex];
     updateFlashcard(word);
 }
 
 function showNextWord() {
-    currentIndex = (currentIndex + 1) % wordsData[currentLevel].length;
-    updateFlashcard(wordsData[currentLevel][currentIndex]);
+    currentIndex = (currentIndex + 1) % selectedWords.length;
+    displayWord();
     flashcard.classList.remove('flip');
 }
 
 function showPreviousWord() {
-    currentIndex = (currentIndex - 1 + wordsData[currentLevel].length) % wordsData[currentLevel].length;
-    updateFlashcard(wordsData[currentLevel][currentIndex]);
+    currentIndex = (currentIndex - 1 + selectedWords.length) % selectedWords.length;
+    displayWord();
     flashcard.classList.remove('flip');
 }
 
@@ -85,11 +128,23 @@ languageSelect.addEventListener("change", () => {
 document.querySelectorAll(".button").forEach(button => {
     button.addEventListener("click", () => {
         currentLevel = button.getAttribute("data-level");
-        languageSelection.classList.add('hidden');
+        displayWordsForSelection(currentLevel);
         levelSelection.classList.add('hidden');
-        flashcardContainer.classList.remove('hidden');
-        displayWord(currentLevel);
+        wordSelection.classList.remove('hidden');
+        languageSelection.classList.add('hidden');
     });
+});
+
+startFlashcardsButton.addEventListener("click", () => {
+    getSelectedWords();
+    wordSelection.classList.add('hidden');
+    flashcardContainer.classList.remove('hidden');
+    displayWord();
+});
+
+backToLevelSelectionButton.addEventListener("click", () => {
+    wordSelection.classList.add('hidden');
+    levelSelection.classList.remove('hidden');
 });
 
 flashcard.addEventListener("click", () => {
@@ -109,7 +164,21 @@ previousCardButton.addEventListener("click", showPreviousWord);
 selectLevelButton.addEventListener("click", () => {
     flashcardContainer.classList.add('hidden');
     levelSelection.classList.remove('hidden');
+    wordSelection.classList.add('hidden');
     languageSelection.classList.remove('hidden');
+});
+
+prevPageButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+        displayWordsForSelection(currentLevel, currentPage - 1);
+    }
+});
+
+nextPageButton.addEventListener("click", () => {
+    const totalPages = Math.ceil(wordsData[currentLevel].length / wordsPerPage);
+    if (currentPage < totalPages) {
+        displayWordsForSelection(currentLevel, currentPage + 1);
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
