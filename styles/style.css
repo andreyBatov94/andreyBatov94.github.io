@@ -135,7 +135,7 @@ body {
   justify-content: center;
   padding: 16px;
   box-sizing: border-box;
-  font-size: 28px;
+  font-size: 32px;
   flex-direction: column;
 }
 
@@ -197,4 +197,40 @@ body {
   border: none;
   border-bottom: 1px solid #333;
   font-size: 20px;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.pagination button {
+  padding: 5px 5px;
+  font-size: 14px;
+  border: none;
+  background-color: transparent;
+}
+
+#word-selection h2 {
+  text-align: center !important;
+  font-size: 24px !important;
+  font-family: Poppins-Bold !important;
+}
+#words-container div input {
+  width: 30px !important;
+  height: 20px !important;
+}
+#words-container div {
+  display: flex;
+  align-items: center;
+}
+#start-flashcards-button {
+  display: block !important;
+  width: 100%;
+  margin-bottom: 20px !important;
+}
+#back-to-level-selection-button {
+  display: block !important;
+  width: 100%;
 }
