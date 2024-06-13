@@ -15,7 +15,7 @@ select {
   width: 100% !important;
   font-size: 1.15rem !important;
   padding: 0.675em 6em 0.675em 1em !important;
-  background-color: #fff !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
   border: 1px solid #caced1 !important;
   border-radius: 0.25rem !important;
   color: #000 !important;
