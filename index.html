@@ -13,7 +13,7 @@
   <body>
     <div class="wrapper">
       <div id="language-selection">
-        <h2>Обрати мову перекладу:</h2>
+        <h2>Обрати мову:</h2>
         <select id="language-select">
           <option value="ru">Російська</option>
           <option selected value="uk">Українська</option>
@@ -30,6 +30,26 @@
           </button>
           <button class="button" data-level="C1">C1 - Advance</button>
         </div>
+      </div>
+
+      <div id="word-selection" class="hidden">
+        <h2>Оберіть слова:</h2>
+        <div id="words-container"></div>
+        <div class="pagination">
+          <button id="prev-page-button">
+            <img src="/images/icons/prev-page.svg" alt="" />
+          </button>
+          <span id="page-info"></span>
+          <button id="next-page-button">
+            <img src="/images/icons/next-page.svg" alt="" />
+          </button>
+        </div>
+        <button class="navigation-button" id="start-flashcards-button">
+          Почати вивчення
+        </button>
+        <button class="navigation-button" id="back-to-level-selection-button">
+          Обрати рівень
+        </button>
       </div>
 
       <div id="flashcard-container" class="hidden">
