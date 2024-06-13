@@ -1,5 +1,27 @@
 @import url(/styles/fonts.css);
-     
+
+* {
+  user-select: none;
+}
+
+*:focus {
+  outline: none;
+}
+select {
+  appearance: none !important;
+  /* safari */
+  -webkit-appearance: none !important;
+  /* other styles for aesthetics */
+  width: 100% !important;
+  font-size: 1.15rem !important;
+  padding: 0.675em 6em 0.675em 1em !important;
+  background-color: #fff !important;
+  border: 1px solid #caced1 !important;
+  border-radius: 0.25rem !important;
+  color: #000 !important;
+  cursor: pointer !important;
+}
+
 body {
     font-family: Poppins-Bold;
         display: flex;
@@ -154,7 +176,7 @@ body {
       }
       #language-select {
         width: 275px;
-        height: 40px;
+/*         height: 40px; */
         background-color: transparent;
         border: none;
         border-bottom: 1px solid #333333;
