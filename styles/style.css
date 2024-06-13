@@ -218,8 +218,8 @@ body {
   font-family: Poppins-Bold !important;
 }
 #words-container div input {
-  width: 30px !important;
-  height: 20px !important;
+  width: 25px !important;
+  height: 25px !important;
 }
 #words-container div {
   display: flex;
