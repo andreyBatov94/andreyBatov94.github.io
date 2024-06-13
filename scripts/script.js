@@ -1,31 +1,54 @@
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-        });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => console.log('ServiceWorker зарегистрирован: ', registration.scope))
+            .catch(err => console.log('ServiceWorker ошибка регистрации: ', err));
     });
 }
 
+const {
+    languageSelection,
+    levelSelection,
+    flashcardContainer,
+    flashcard,
+    cardFront,
+    cardBack,
+    speakButton,
+    nextCardButton,
+    previousCardButton,
+    selectLevelButton,
+    languageSelect
+} = {
+    languageSelection: document.getElementById('language-selection'),
+    levelSelection: document.getElementById('level-selection'),
+    flashcardContainer: document.getElementById('flashcard-container'),
+    flashcard: document.getElementById('flashcard'),
+    cardFront: document.getElementById('card-front'),
+    cardBack: document.getElementById('card-back'),
+    speakButton: document.getElementById('speak-button'),
+    nextCardButton: document.getElementById('next-card-button'),
+    previousCardButton: document.getElementById('previous-card-button'),
+    selectLevelButton: document.getElementById('select-level-button'),
+    languageSelect: document.getElementById('language-select')
+};
+
 let wordsData = {};
-const languageSelection = document.getElementById('language-selection');
-const levelSelection = document.getElementById('level-selection');
-const flashcardContainer = document.getElementById('flashcard-container');
-const flashcard = document.getElementById('flashcard');
-const cardFront = document.getElementById('card-front');
-const cardBack = document.getElementById('card-back');
-const speakButton = document.getElementById('speak-button');
-const nextCardButton = document.getElementById('next-card-button');
-const previousCardButton = document.getElementById('previous-card-button');
-const selectLevelButton = document.getElementById('select-level-button');
-const languageSelect = document.getElementById('language-select');
 let currentLevel = "";
 let currentIndex = 0;
 
 async function loadWordsData(language) {
-    const response = await fetch(`/scripts/words/wordsData_${language}.json`); // Замените на правильный путь к вашим JSON-файлам
-    wordsData = await response.json();
+    try {
+        const response = await fetch(`/scripts/words/wordsData_${language}.json`);
+        wordsData = await response.json();
+        console.log('Успешная загрузка списка слова для выбранного языка:', language);
+    } catch (err) {
+        console.error('Ошибка загрузки списка слов для выбранного языка:', err);
+    }
+}
+
+function updateFlashcard(word) {
+    cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
+    cardBack.innerHTML = `<div>${word.Перевод}</div>`;
 }
 
 function getRandomWord(level) {
@@ -36,23 +59,18 @@ function getRandomWord(level) {
 
 function displayWord(level) {
     const word = getRandomWord(level);
-    cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
-    cardBack.innerHTML = `<div>${word.Перевод}</div>`;
+    updateFlashcard(word);
 }
 
 function showNextWord() {
     currentIndex = (currentIndex + 1) % wordsData[currentLevel].length;
-    const word = wordsData[currentLevel][currentIndex];
-    cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
-    cardBack.innerHTML = `<div>${word.Перевод}</div>`;
+    updateFlashcard(wordsData[currentLevel][currentIndex]);
     flashcard.classList.remove('flip');
 }
 
 function showPreviousWord() {
     currentIndex = (currentIndex - 1 + wordsData[currentLevel].length) % wordsData[currentLevel].length;
-    const word = wordsData[currentLevel][currentIndex];
-    cardFront.innerHTML = `<div>${word.Слово}</div><div>${word.Транскрипция}</div>`;
-    cardBack.innerHTML = `<div>${word.Перевод}</div>`;
+    updateFlashcard(wordsData[currentLevel][currentIndex]);
     flashcard.classList.remove('flip');
 }
 
@@ -61,13 +79,10 @@ languageSelect.addEventListener("change", () => {
     loadWordsData(selectedLanguage).then(() => {
         languageSelection.classList.add('hidden');
         levelSelection.classList.remove('hidden');
-        console.log('Words data loaded successfully for language:', selectedLanguage);
-    }).catch(err => {
-        console.error('Error loading words data:', err);
     });
 });
 
-document.querySelectorAll(".button").forEach((button) => {
+document.querySelectorAll(".button").forEach(button => {
     button.addEventListener("click", () => {
         currentLevel = button.getAttribute("data-level");
         languageSelection.classList.add('hidden');
@@ -83,12 +98,10 @@ flashcard.addEventListener("click", () => {
 
 speakButton.addEventListener("click", () => {
     const firstDiv = cardFront.querySelector('div:first-child');
-    const utterance = new SpeechSynthesisUtterance(
-      firstDiv.textContent
-    );
+    const utterance = new SpeechSynthesisUtterance(firstDiv.textContent);
     utterance.lang = "en-US";
     speechSynthesis.speak(utterance);
-  });
+});
 
 nextCardButton.addEventListener("click", showNextWord);
 previousCardButton.addEventListener("click", showPreviousWord);
@@ -99,14 +112,10 @@ selectLevelButton.addEventListener("click", () => {
     languageSelection.classList.remove('hidden');
 });
 
-// Загрузка данных для Украинского языка по умолчанию
 document.addEventListener('DOMContentLoaded', () => {
     const selectedLanguage = languageSelect.value;
     loadWordsData(selectedLanguage).then(() => {
-        console.log('Words data loaded successfully for default language:', selectedLanguage);
         languageSelection.classList.remove('hidden');
         levelSelection.classList.remove('hidden');
-    }).catch(err => {
-        console.error('Error loading words data:', err);
     });
 });
