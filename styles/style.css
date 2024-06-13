@@ -67,7 +67,7 @@ body {
         
      }
      #speak-button { grid-area: 1 / 2 / 2 / 4; }
-     #next-card-button { grid-area: 1 / 4 / 2 / 5; padding: 10px 10px 10px 20px !important;}
+     #next-card-button { grid-area: 1 / 4 / 2 / 5; }
       .hidden {
         display: none;
       }
@@ -144,4 +144,19 @@ body {
       .navigation-button {
         background-color: #4caf50;
         color: white;
+      }
+      #language-selection {
+        position: absolute;
+        top: 25px;
+        width: 275px;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      #language-select {
+        width: 275px;
+        height: 40px;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #333333;
+        font-size: 20px;
       }
