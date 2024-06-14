@@ -24,7 +24,9 @@ const {
     wordsContainer,
     prevPageButton,
     nextPageButton,
-    pageInfo
+    pageInfo,
+    selectAllPageButton, //all select
+    selectAllLevelButton //all select
 } = {
     languageSelection: document.getElementById('language-selection'),
     levelSelection: document.getElementById('level-selection'),
@@ -43,7 +45,9 @@ const {
     wordsContainer: document.getElementById('words-container'),
     prevPageButton: document.getElementById('prev-page-button'),
     nextPageButton: document.getElementById('next-page-button'),
-    pageInfo: document.getElementById('page-info')
+    pageInfo: document.getElementById('page-info'),
+    selectAllPageButton: document.getElementById('select-all-page'),  //all select
+    selectAllLevelButton: document.getElementById('select-all-level') //all select
 };
 
 let wordsData = {};
@@ -116,6 +120,17 @@ function showPreviousWord() {
     displayWord();
     flashcard.classList.remove('flip');
 }
+/*All select start */
+function selectAllWordsOnPage() {
+    const checkboxes = wordsContainer.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => checkbox.checked = true);
+}
+
+function selectAllWordsInLevel() {
+    selectedWords = wordsData[currentLevel].slice();
+    displayWordsForSelection(currentLevel, currentPage);
+}
+/*All select end*/
 
 languageSelect.addEventListener("change", () => {
     const selectedLanguage = languageSelect.value;
@@ -188,3 +203,5 @@ document.addEventListener('DOMContentLoaded', () => {
         levelSelection.classList.remove('hidden');
     });
 });
+
+selectAllPageButton.addEventListener("click", selectAllWordsOnPage); //all select
